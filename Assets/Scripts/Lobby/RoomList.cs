@@ -47,7 +47,9 @@ public class RoomList : MonoBehaviourPunCallbacks
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
-        if(cachedRoomList.Count <= 0)
+        Debug.Log("Room List Updated");
+        Debug.Log("Room Count: " + roomList.Count);
+        if (cachedRoomList.Count <= 0)
         {
             cachedRoomList = roomList;
         }
@@ -78,12 +80,14 @@ public class RoomList : MonoBehaviourPunCallbacks
 
     void UpdateUI()
     {
-        foreach(Transform child in parentUI)
+        Debug.Log("Updating UI with " + cachedRoomList.Count + " rooms.");
+        foreach (Transform child in parentUI)
         {
             Destroy(child.gameObject);
         }
         foreach(var room in cachedRoomList)
         {
+            Debug.Log("room: " + room.Name + " - " + room.PlayerCount + "/" + room.MaxPlayers);
             var roomItem = Instantiate(roomNameUI, parentUI);
             roomItem.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = room.Name;
             roomItem.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = room.PlayerCount.ToString() + "/" + "10";

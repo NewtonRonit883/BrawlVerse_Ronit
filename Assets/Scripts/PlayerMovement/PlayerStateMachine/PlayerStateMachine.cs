@@ -93,7 +93,7 @@ public class PlayerStateMachine : MonoBehaviourPun
     void Awake()
     {
         InitializeControls();
-        cam = Camera.main;
+        
         //animator.applyRootMotion = true;
         runtimeOverride = new AnimatorOverrideController(baseOverrideController);
         animator.runtimeAnimatorController = runtimeOverride;
