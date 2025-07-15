@@ -10,6 +10,8 @@ public class PlayerSoundManager : MonoBehaviour
     public AudioClip footstepSFX;
     public AudioSource jumpSource;
     public AudioClip jumpSFX;
+    public AudioSource attackSource;
+    public AudioClip[] attackSFX;
     public void PlayFootsteps()
     {
         GetComponent<PhotonView>().RPC("PlayFootstepsRPC", RpcTarget.All);
@@ -33,5 +35,17 @@ public class PlayerSoundManager : MonoBehaviour
         jumpSource.volume = 0.7f; // Set volume to a reasonable level
         jumpSource.pitch = UnityEngine.Random.Range(0.8f, 1.2f); // Randomize pitch for more natural sound
         jumpSource.Play();
+    }
+    public void PlayAttack(int attackIndex)
+    {
+        GetComponent<PhotonView>().RPC("PlayAttackRPC", RpcTarget.All, attackIndex);
+    }
+    [PunRPC]
+    public void PlayAttackRPC(int attackIndex)
+    {
+        attackSource.clip = attackSFX[attackIndex];
+        attackSource.volume = 0.85f; // Set volume to a reasonable level
+        attackSource.pitch = UnityEngine.Random.Range(0.8f, 1.2f); // Randomize pitch for more natural sound
+        attackSource.Play();
     }
 }

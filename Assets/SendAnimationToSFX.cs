@@ -14,4 +14,12 @@ public class SendAnimationEventToSFXManager : MonoBehaviour
     {
         soundManager.PlayJump();
     }
+    public void TriggerPunchSFX()
+    {
+        soundManager.PlayAttack(0);
+    }
+    public void TriggerKickSFX()
+    {
+        soundManager.PlayAttack(1);
+    }
 }

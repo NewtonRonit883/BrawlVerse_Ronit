@@ -8,27 +8,38 @@ public class SoundManager : MonoBehaviour
     // Start is called before the first frame update
     public AudioSource soundsource;
     public AudioSource Click;
+    public AudioSource JoinSource;
+    public AudioClip JoinClip;
     public AudioClip clicksfx;
     public AudioClip[] SoundClips;
     private void Start()
     {
-        PlaySound();
+        PlaySound(0);
     }
-    public void PlaySound()
+    public void PlaySound(int index)
     {
-        soundsource.clip = SoundClips[0];
+        soundsource.clip = SoundClips[index];
         
-        soundsource.volume = 0.8f; // Set volume to a reasonable level
+        soundsource.volume = 0.45f; // Set volume to a reasonable level
         soundsource.Play();
     }
-    
+   
     public void Click_sound()
     {
         Click.clip = clicksfx;
         Click.volume = 0.7f;
         Click.Play();
     }
-    
-
+    public void JoinSound()
+    {
+        GetComponent<PhotonView>().RPC("PlayJoinRPC", RpcTarget.All);
+    }
+    [PunRPC]
+    public void PlayJoinRPC()
+    {
+        JoinSource.clip = JoinClip;
+        JoinSource.volume = 0.7f; // Set volume to a reasonable level
+        JoinSource.Play();
+    }
 
 }

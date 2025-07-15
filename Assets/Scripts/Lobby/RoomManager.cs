@@ -42,6 +42,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     public int deaths;
     [HideInInspector]
     public int damage;
+    public bool Joined = false;
     
     private void Awake()
     {
@@ -82,7 +83,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
         Debug.Log("Room Joined");
         roomCam.SetActive(false);
         EndgameUI.SetActive(true);
-        FindObjectOfType<SoundManager>().soundsource.gameObject.SetActive(false);
+        FindObjectOfType<SoundManager>().PlaySound(1);
+        
         SpawnPlayer();
     }
 
@@ -101,6 +103,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
         PhotonView view = _player.GetComponent<PhotonView>();
         view.RPC("SetPlayerName", RpcTarget.AllBuffered, nickName);
         PhotonNetwork.LocalPlayer.NickName = nickName;
+        FindObjectOfType<JOINNOTIFICATION>().ShowNotification(PhotonNetwork.LocalPlayer.NickName);
+        FindObjectOfType<SoundManager>().JoinSound();
         if (view != null && view.IsMine && freeLook != null)
         {
             Transform lookAt = _player.transform.GetChild(1);
