@@ -62,4 +62,5 @@ public class leaderboard : MonoBehaviour
     {
         playerHolder.SetActive(Input.GetKey(KeyCode.Tab)); // Toggle the visibility of the player holder based on the Tab key input 
     }
+    
 }

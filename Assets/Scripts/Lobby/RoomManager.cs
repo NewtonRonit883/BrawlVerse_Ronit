@@ -29,6 +29,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     [Header("UI")]
     public GameObject nickNameUI;
     public GameObject connectingUI;
+    public GameObject playerListUI;
 
     [Header("Room Name")]
     public string roomName = "test";
@@ -51,16 +52,13 @@ public class RoomManager : MonoBehaviourPunCallbacks
     }
     private void Start()
     {
-        Material material = playerColors[UnityEngine.Random.Range(0, playerColors.Length)];
-        SkinnedMeshRenderer smr = player.transform.GetChild(0).GetChild(1).GetComponent<SkinnedMeshRenderer>();
-        Material[] sharedMats = smr.sharedMaterials;
-        sharedMats[0] = material;
-        smr.sharedMaterials = sharedMats;
+        
     }
 
     public void SetNickname(string _name)
     {
         nickName = _name;
+        
     }
     public void OnJoinButtonPressed()
     {
@@ -94,8 +92,13 @@ public class RoomManager : MonoBehaviourPunCallbacks
         
         
         Transform spawnPoint = spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Length)];
+
         GameObject _player = PhotonNetwork.Instantiate(player.name, spawnPoint.position, Quaternion.identity);
-       
+        Material material = playerColors[UnityEngine.Random.Range(0, playerColors.Length)];
+        SkinnedMeshRenderer smr = _player.transform.GetChild(0).GetChild(1).GetComponent<SkinnedMeshRenderer>();
+        Material[] sharedMats = smr.sharedMaterials;
+        sharedMats[0] = material;
+        smr.sharedMaterials = sharedMats;
         _player.GetComponent<PlayerHealth>().isLocalPlayer = true;
         
         Debug.Log(_player.name);
@@ -103,8 +106,13 @@ public class RoomManager : MonoBehaviourPunCallbacks
         PhotonView view = _player.GetComponent<PhotonView>();
         view.RPC("SetPlayerName", RpcTarget.AllBuffered, nickName);
         PhotonNetwork.LocalPlayer.NickName = nickName;
-        FindObjectOfType<JOINNOTIFICATION>().ShowNotification(PhotonNetwork.LocalPlayer.NickName);
-        FindObjectOfType<SoundManager>().JoinSound();
+
+        if (!Joined)
+        {
+           
+            FindObjectOfType<JOINNOTIFICATION>().ShowNotification(PhotonNetwork.LocalPlayer.NickName);
+            
+        }
         if (view != null && view.IsMine && freeLook != null)
         {
             Transform lookAt = _player.transform.GetChild(1);
@@ -112,6 +120,41 @@ public class RoomManager : MonoBehaviourPunCallbacks
             freeLook.LookAt = lookAt;
         }
     }
+     
+    /*public void StartGameRPC()
+    {
+        Debug.Log("Spawning Player");
+
+
+        Transform spawnPoint = spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Length)];
+
+        GameObject _player = PhotonNetwork.Instantiate(player.name, spawnPoint.position, Quaternion.identity);
+        Material material = playerColors[UnityEngine.Random.Range(0, playerColors.Length)];
+        SkinnedMeshRenderer smr = _player.transform.GetChild(0).GetChild(1).GetComponent<SkinnedMeshRenderer>();
+        Material[] sharedMats = smr.sharedMaterials;
+        sharedMats[0] = material;
+        smr.sharedMaterials = sharedMats;
+        _player.GetComponent<PlayerHealth>().isLocalPlayer = true;
+
+        Debug.Log(_player.name);
+
+        PhotonView view = _player.GetComponent<PhotonView>();
+        view.RPC("SetPlayerName", RpcTarget.AllBuffered, nickName);
+        PhotonNetwork.LocalPlayer.NickName = nickName;
+        if (!Joined)
+        {
+            FindObjectOfType<JOINNOTIFICATION>().ShowNotification(PhotonNetwork.LocalPlayer.NickName);
+            FindObjectOfType<SoundManager>().JoinSound();
+            Joined = true;
+        }
+
+        if (view != null && view.IsMine && freeLook != null)
+        {
+            Transform lookAt = _player.transform.GetChild(1);
+            freeLook.Follow = lookAt;
+            freeLook.LookAt = lookAt;
+        }
+    }*/
     public void SetHashes()
     {
         try

@@ -22,4 +22,8 @@ public class SendAnimationEventToSFXManager : MonoBehaviour
     {
         soundManager.PlayAttack(1);
     }
+    public void TriggerStompSFX()
+    {
+        soundManager.PlayAttack(2);
+    }
 }

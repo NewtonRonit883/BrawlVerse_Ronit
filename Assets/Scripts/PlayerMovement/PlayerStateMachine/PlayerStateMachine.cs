@@ -372,7 +372,7 @@ public class PlayerStateMachine : MonoBehaviourPun
     public void PullPlayerThroughAir()
     {
         if (isDashing) return; // Prevent overlapping
-
+        gameObject.GetComponent<PlayerSoundManager>().PlayDash();
         Vector3 inputDirection = new Vector3(moveInput.x, 0f, moveInput.y).normalized;
         if (inputDirection == Vector3.zero)
         {

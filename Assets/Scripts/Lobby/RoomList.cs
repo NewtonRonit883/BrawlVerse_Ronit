@@ -87,6 +87,10 @@ public class RoomList : MonoBehaviourPunCallbacks
         }
         foreach(var room in cachedRoomList)
         {
+            /*if (room.PlayerCount <=0)
+            {
+                continue; // Skip rooms that are empty or removed
+            }*/
             Debug.Log("room: " + room.Name + " - " + room.PlayerCount + "/" + room.MaxPlayers);
             var roomItem = Instantiate(roomNameUI, parentUI);
             roomItem.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = room.Name;

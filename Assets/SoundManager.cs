@@ -12,6 +12,7 @@ public class SoundManager : MonoBehaviour
     public AudioClip JoinClip;
     public AudioClip clicksfx;
     public AudioClip[] SoundClips;
+    public SoundController soundController;
     private void Start()
     {
         PlaySound(0);
@@ -19,8 +20,15 @@ public class SoundManager : MonoBehaviour
     public void PlaySound(int index)
     {
         soundsource.clip = SoundClips[index];
-        
-        soundsource.volume = 0.45f; // Set volume to a reasonable level
+        if (soundController.isMuted)
+        {
+            soundsource.volume = 0f; // Mute the sound if muted
+        }
+        else
+        {
+            soundsource.volume = 0.45f; // Set volume to a reasonable level
+        }
+        //soundsource.volume = 0.45f; // Set volume to a reasonable level
         soundsource.Play();
     }
    

@@ -8,6 +8,7 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 public class PlayerAttackState : PlayerBaseState
 {
     private AttackData data;
+    //public GameObject hitVFX;
 
     public PlayerAttackState(PlayerStateMachine ctx, PlayerStateFactory factory, AttackData attack)
         : base(ctx, factory)
@@ -79,6 +80,7 @@ public class PlayerAttackState : PlayerBaseState
             // Apply damage
             if (hit.TryGetComponent<PlayerHealth>(out var health))
             {
+                
                 //Debug.Log($"Applying damage to player with nickname: {health.photonView.Owner.NickName}");
                 RoomManager.Instance.damage += data.damage;
                 RoomManager.Instance.SetHashes();
@@ -88,7 +90,7 @@ public class PlayerAttackState : PlayerBaseState
                     RoomManager.Instance.SetHashes();
 
                 }
-                health.transform.gameObject.GetComponent<PhotonView>().RPC("TakeDamage", RpcTarget.All, data.damage);
+                health.transform.gameObject.GetComponent<PhotonView>().RPC("TakeDamage", RpcTarget.All,hit.transform.position, data.damage);
                 
                 
 

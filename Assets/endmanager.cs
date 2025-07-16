@@ -5,10 +5,12 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using Photon.Pun.UtilityScripts;
-public class endmanager : MonoBehaviour
+using Photon.Realtime;
+using UnityEngine.SceneManagement;
+public class endmanager : MonoBehaviourPunCallbacks
 {
     // Start is called before the first frame update
-    public float duration = 1f;
+    public float duration = 300f;
     public GameObject EndUI;
     public GameObject[] slots;
     public TextMeshProUGUI[] scoretexts;
@@ -16,9 +18,12 @@ public class endmanager : MonoBehaviour
     public TextMeshProUGUI[] kdtexts;
     public bool timerstarted = false;
     public TextMeshProUGUI timertext;
+    private float timerdur;
     private void Start()
     {
         timer();
+        timerdur = duration;
+        
     }
     void Update()
     {
@@ -90,5 +95,22 @@ public class endmanager : MonoBehaviour
         int minutes = Mathf.FloorToInt(duration / 60F);
         int seconds = Mathf.FloorToInt(duration%60);
         timertext.text = $"{minutes}:{seconds:00}";
+    }
+
+    public void LeaveTheRoom()
+    {
+        PhotonNetwork.LeaveRoom();
+        Time.timeScale = 1f; // Reset time scale when leaving the room
+        //EndUI.SetActive(false); // Hide the end UI when leaving the room
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); // Reload the current scene
+    }
+    public override void OnLeftRoom()
+    {
+        
+        // Optionally, you can add logic here to handle what happens when the player leaves the room
+        Debug.Log("Left the room successfully.");
+        timerstarted = false;
+        duration = timerdur; // Reset the timer duration    
+        // You might want to load a different scene or reset the game state here
     }
 }

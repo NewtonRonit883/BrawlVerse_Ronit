@@ -6,12 +6,22 @@ using Photon.Pun;
 public class PlayerSoundManager : MonoBehaviour
 {
     // Start is called before the first frame update
+    [Header("FootStep")]
     public AudioSource footstepSource;
     public AudioClip footstepSFX;
+    [Space]
+    [Header("Jump")]
     public AudioSource jumpSource;
     public AudioClip jumpSFX;
+    [Space]
+    [Header("Dash")]
+    public AudioSource dashSource;
+    public AudioClip dashSFX;
+    [Space]
+    [Header("Attack")]
     public AudioSource attackSource;
     public AudioClip[] attackSFX;
+
     public void PlayFootsteps()
     {
         GetComponent<PhotonView>().RPC("PlayFootstepsRPC", RpcTarget.All);
@@ -47,5 +57,17 @@ public class PlayerSoundManager : MonoBehaviour
         attackSource.volume = 0.85f; // Set volume to a reasonable level
         attackSource.pitch = UnityEngine.Random.Range(0.8f, 1.2f); // Randomize pitch for more natural sound
         attackSource.Play();
+    }
+    public void PlayDash()
+    {
+        GetComponent<PhotonView>().RPC("PlayDashRPC", RpcTarget.All);
+    }
+    [PunRPC]
+    public void PlayDashRPC()
+    {
+        dashSource.clip = dashSFX;
+        dashSource.volume = 0.75f; // Set volume to a reasonable level
+        dashSource.pitch = UnityEngine.Random.Range(0.8f, 1.2f); // Randomize pitch for more natural sound
+        dashSource.Play();
     }
 }

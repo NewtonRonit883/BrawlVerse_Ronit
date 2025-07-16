@@ -46,6 +46,11 @@ MonoBehaviour:
   - PlayJumpRPC
   - PlayJoinRPC
   - PlayAttackRPC
+  - PlayDashRPC
+  - StartGameRPC
+  - SetHashes
+  - JoinedPlayerRPC
+  - ShowNotificationRPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
