@@ -9,6 +9,7 @@ public class JOINNOTIFICATION : MonoBehaviour
     // Start is called before the first frame update
     public RectTransform notificationPanel;
     public TextMeshProUGUI notificationText;
+
     void Start()
     {
         
@@ -24,6 +25,19 @@ public class JOINNOTIFICATION : MonoBehaviour
     public void ShowNotificationRPC(string name)
     {
         notificationText.text = $"{name} has joined the game!";
+        notificationPanel.gameObject.SetActive(true);
+        FindObjectOfType<SoundManager>().JoinSound(); // Play join sound
+        StartCoroutine(HideNotificationAfterDelay(3f)); // Hide after 3 seconds
+    }
+    public void LeftNotification(string name)
+    {
+        GetComponent<PhotonView>().RPC("LeftNotificationRPC", RpcTarget.AllBuffered, name);
+
+    }
+    [PunRPC]
+    public void LeftNotificationRPC(string name)
+    {
+        notificationText.text = $"{name} has left the game!";
         notificationPanel.gameObject.SetActive(true);
         FindObjectOfType<SoundManager>().JoinSound(); // Play join sound
         StartCoroutine(HideNotificationAfterDelay(3f)); // Hide after 3 seconds

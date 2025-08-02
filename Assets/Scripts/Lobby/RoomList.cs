@@ -4,6 +4,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class RoomList : MonoBehaviourPunCallbacks
 {
@@ -16,13 +17,17 @@ public class RoomList : MonoBehaviourPunCallbacks
     public GameObject roomNameUI;
     public Transform parentUI;
 
+    [Header("Play buttons")]
+    public Button CreateLobby;
+    public GameObject CreateLobbyUI;
+
     private List<RoomInfo> cachedRoomList = new List<RoomInfo>();
 
     private void Awake()
     {
         instance = this;
     }
-
+    
     IEnumerator Start()
     {
         if (PhotonNetwork.InRoom)
@@ -87,10 +92,10 @@ public class RoomList : MonoBehaviourPunCallbacks
         }
         foreach(var room in cachedRoomList)
         {
-            /*if (room.PlayerCount <=0)
+            if (room.PlayerCount <=0)
             {
                 continue; // Skip rooms that are empty or removed
-            }*/
+            }
             Debug.Log("room: " + room.Name + " - " + room.PlayerCount + "/" + room.MaxPlayers);
             var roomItem = Instantiate(roomNameUI, parentUI);
             roomItem.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = room.Name;
@@ -107,4 +112,11 @@ public class RoomList : MonoBehaviourPunCallbacks
         this.gameObject.SetActive(false);
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Return) && CreateLobbyUI.activeInHierarchy)
+        {
+            CreateLobby.onClick.Invoke();
+        }
+    }
 }

@@ -80,6 +80,7 @@ public class PlayerHealth : MonoBehaviour
         UpdateHealthUI(); // Update the health UI after taking damage
         
         hitVFX.GetComponent<CFXR_ParticleText>().text = damageAmount.ToString(); // Set the damage amount in the hit effect    
+        Debug.Log("Damage: "+damageAmount.ToString());
         GameObject score = PhotonNetwork.Instantiate(hitVFX.name, VFXpoint.position, Quaternion.identity); // Spawn hit effect at the hit point
         //Debug.Log("Player health: " + photonView.Owner.NickName + health);
         Destroy(score, 2);

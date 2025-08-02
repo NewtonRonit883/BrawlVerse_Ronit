@@ -9,11 +9,17 @@ public class PlayerAttackState : PlayerBaseState
 {
     private AttackData data;
     //public GameObject hitVFX;
+    public float Attack_knockback;
+    public float duration;
 
     public PlayerAttackState(PlayerStateMachine ctx, PlayerStateFactory factory, AttackData attack)
         : base(ctx, factory)
     {
         data = attack;
+    }
+    void Start() {         // Initialize any necessary components or variables here
+        Attack_knockback = data.pushForce;
+        duration = 1f;
     }
 
     public override void EnterState()
@@ -92,7 +98,7 @@ public class PlayerAttackState : PlayerBaseState
                 }
                 health.transform.gameObject.GetComponent<PhotonView>().RPC("TakeDamage", RpcTarget.All,hit.transform.position, data.damage);
                 
-                
+                Knockback(hit.transform);
 
 
 
@@ -144,6 +150,20 @@ public class PlayerAttackState : PlayerBaseState
         {
             // Handle exceptions as needed
         }
+    }
+    void Knockback(Transform pos_enemy)
+    {
+        float elapsed = 0f;
+
+        Vector3 direction = ctx.transform.position - pos_enemy.position;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            Vector3 force = direction.normalized * Attack_knockback * Time.deltaTime;
+            pos_enemy.position += force;
+            //ctx.rigidbody.AddForce(force, ForceMode.VelocityChange);
+        }
+
     }
 
 }

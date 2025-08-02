@@ -4,10 +4,13 @@ using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Photon.Pun.UtilityScripts;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 using JetBrains.Annotations;
 using UnityEngine.Rendering;
+using TMPro;
+using Unity.VisualScripting;
 
 public class RoomManager : MonoBehaviourPunCallbacks
 {
@@ -28,8 +31,14 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     [Header("UI")]
     public GameObject nickNameUI;
-    public GameObject connectingUI;
+    public Button JoinButton;
+    
     public GameObject playerListUI;
+
+    [Header("Connecting Screen")]
+    public GameObject connectingUI;
+    public TextMeshProUGUI no_of_players;
+    public GameObject startGameButton;
 
     [Header("Room Name")]
     public string roomName = "test";
@@ -37,6 +46,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
     string nickName = "unnamed";
     [Header("Player Color")]
     public Material[] playerColors;
+    [Header("RoomData")]
+    public RoomData roomData;
     [HideInInspector]
     public int kills;
     [HideInInspector]
@@ -44,6 +55,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     [HideInInspector]
     public int damage;
     public bool Joined = false;
+    public bool game_Started = false;
     
     private void Awake()
     {
@@ -52,9 +64,37 @@ public class RoomManager : MonoBehaviourPunCallbacks
     }
     private void Start()
     {
+        no_of_players.text = "1/16";
+        roomData = new RoomData(roomName, 0, 16, false, 300f);
         
     }
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        GetComponent<PhotonView>().RPC("playerchanged", RpcTarget.AllBuffered);
+        Debug.Log("Player Left Room: " + otherPlayer.NickName);
+        if (PhotonNetwork.IsMasterClient)
+        {
+            FindObjectOfType<SoundManager>().PlaySound(2);
+        }
+        if (game_Started)
+        {
+            FindObjectOfType<JOINNOTIFICATION>().LeftNotification(PhotonNetwork.LocalPlayer.NickName);
+        }
+        Joined = false;
+    }
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        
+        Debug.Log("Player Joined Room: " + newPlayer.NickName);
+        GetComponent<PhotonView>().RPC("playerchanged", RpcTarget.AllBuffered);
 
+
+    }
+    [PunRPC]
+    public void playerchanged()
+    {
+        no_of_players.text = PhotonNetwork.CurrentRoom.PlayerCount.ToString()+"/16";
+    }
     public void SetNickname(string _name)
     {
         nickName = _name;
@@ -73,16 +113,44 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
         PhotonNetwork.JoinOrCreateRoom(roomName, opts, TypedLobby.Default);
 
+
         nickNameUI.SetActive(false);
         connectingUI.SetActive(true);
+        
     }
     public override void OnJoinedRoom()
     {
         Debug.Log("Room Joined");
+        if (PhotonNetwork.IsMasterClient)
+        {
+            startGameButton.SetActive(true);
+        }
+        else
+        {
+            startGameButton.SetActive(false);
+        }
+
+
+
+    }
+    public void StartButtonPressed()
+    {
+        Debug.Log("Start Button Pressed");
+        if (PhotonNetwork.IsMasterClient)
+        {
+            PhotonNetwork.CurrentRoom.IsOpen = false; // Prevent new players from joining
+            PhotonNetwork.CurrentRoom.IsVisible = false; // Hide the room from the lobby
+            //PhotonNetwork.LoadLevel("GameScene"); // Load the game scene
+            GetComponent<PhotonView>().RPC("StartGameRPC", RpcTarget.AllBuffered);
+        }
+    }
+    [PunRPC]
+    public void StartGameRPC()
+    {
+        Debug.Log("Starting Game");
         roomCam.SetActive(false);
         EndgameUI.SetActive(true);
         FindObjectOfType<SoundManager>().PlaySound(1);
-        
         SpawnPlayer();
     }
 
@@ -111,6 +179,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         {
            
             FindObjectOfType<JOINNOTIFICATION>().ShowNotification(PhotonNetwork.LocalPlayer.NickName);
+            Joined = true;
             
         }
         if (view != null && view.IsMine && freeLook != null)
@@ -172,5 +241,13 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
         }
     }
-    
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Return) && nickNameUI.activeInHierarchy)
+        {
+            JoinButton.onClick.Invoke();
+        }
+
+    }
+
 }

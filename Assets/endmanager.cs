@@ -100,17 +100,16 @@ public class endmanager : MonoBehaviourPunCallbacks
     public void LeaveTheRoom()
     {
         PhotonNetwork.LeaveRoom();
-        Time.timeScale = 1f; // Reset time scale when leaving the room
+        if (photonView.IsMine) Time.timeScale = 1f; // Reset time scale when leaving the room
         //EndUI.SetActive(false); // Hide the end UI when leaving the room
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); // Reload the current scene
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); // Reload the current scene
     }
     public override void OnLeftRoom()
     {
         
         // Optionally, you can add logic here to handle what happens when the player leaves the room
         Debug.Log("Left the room successfully.");
-        timerstarted = false;
-        duration = timerdur; // Reset the timer duration    
+        SceneManager.LoadScene(0); // Reset the timer duration    
         // You might want to load a different scene or reset the game state here
     }
 }

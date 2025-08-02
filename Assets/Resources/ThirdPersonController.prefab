@@ -1597,13 +1597,13 @@ MonoBehaviour:
   runtimeOverride: {fileID: 0}
   Speed: 5
   TurnVelocity: 0.1
-  gravity: -9.81
-  jumpHeight: 3
+  gravity: -15
+  jumpHeight: 2.5
   groundDistance: 0.1
   groundCheck: {fileID: 2276275970489669414}
   gLayer:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 4294967295
   EnemyLayer:
     serializedVersion: 2
     m_Bits: 64
