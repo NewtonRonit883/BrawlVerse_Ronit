@@ -53,6 +53,7 @@ MonoBehaviour:
   - ShowNotificationRPC
   - playerchanged
   - LeftNotificationRPC
+  - RestartGameRPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

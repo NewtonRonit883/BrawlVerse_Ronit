@@ -18,7 +18,7 @@ public class endmanager : MonoBehaviourPunCallbacks
     public TextMeshProUGUI[] kdtexts;
     public bool timerstarted = false;
     public TextMeshProUGUI timertext;
-    private float timerdur;
+    public float timerdur;
     private void Start()
     {
         timer();

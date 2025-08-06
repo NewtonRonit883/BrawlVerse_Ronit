@@ -14832,7 +14832,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isDynamic: 0
-  text: 12
+  text: 15
   size: 0.7
   letterSpacing: 0.35
   backgroundColor: {r: 0.4433962, g: 0, b: 0, a: 1}
