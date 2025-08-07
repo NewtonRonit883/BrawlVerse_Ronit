@@ -101,6 +101,8 @@ public class endmanager : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.LeaveRoom();
         if (photonView.IsMine) Time.timeScale = 1f; // Reset time scale when leaving the room
+        duration = timerdur;
+        timerstarted = false; // Reset the timer state
         //EndUI.SetActive(false); // Hide the end UI when leaving the room
         //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); // Reload the current scene
     }
